@@ -1,0 +1,65 @@
+# Hamburger control with sliding tray
+
+# Layers
+
+listView = new Layer
+	x:-350, y:190, width:289, height:485, image:"images/phase3a_navigation_hamburger_dynamic_list.png"
+mainView = new Layer
+	x:0, y:0, width:754, height:1549, image:"images/phase3a_navigation_hamburger_dynamic_mainview.png"
+	
+hamburgerContainer = new Layer width: 75, height: 75, x: 30, y: 20, backgroundColor: "transparent", superLayer: hamburgerContainer
+firstViewHamburger = new Layer width: 65, height: 8, backgroundColor: "white", borderRadius: 10, superLayer: hamburgerContainer
+firstViewHamburger.center()
+firstViewHamburger.y = 15
+secondViewHamburger = firstViewHamburger.copy()
+secondViewHamburger.superLayer = hamburgerContainer
+secondViewHamburger.y = 35
+thirdViewHamburger = firstViewHamburger.copy()
+thirdViewHamburger.superLayer = hamburgerContainer
+thirdViewHamburger.y = 55
+
+settingsButton = new Layer 
+	width:50 
+	height:51
+	x:658 
+	y:30
+	image:"images/phase3a_navigation_assets_settings_button.png"
+	opacity:0
+
+# Hamburger menu states
+
+firstViewHamburger.states.add({ touched: y: secondViewHamburger.y, rotationZ: 135 })
+firstViewHamburger.states.animationOptions = { curve: "spring(150, 20, 0)" }
+secondViewHamburger.states.add({ touched: opacity: 0})
+secondViewHamburger.states.animationOptions = firstViewHamburger.states.animationOptions
+thirdViewHamburger.states.add({ touched: y: secondViewHamburger.y, rotationZ: -135 })
+thirdViewHamburger.states.animationOptions = firstViewHamburger.states.animationOptions
+
+# Layer2 states
+
+mainView.states.add({ touched: x: 360 })
+mainView.states.animationOptions = { curve: "spring(100, 20, 0)" }
+
+# List states
+
+listView.states.add({ touched: x: 30, y: 190 })
+listView.states.animationOptions = { curve: "spring(100, 20, 0)" }
+
+settingsButton.states.add
+	second: {opacity:1
+	}
+	
+settingsButton.states.animationOptions =
+	delay:0.3
+	curve: "spring(100,12,5)"
+
+# Events
+
+hamburgerContainer.on Events.Click, ->
+	firstViewHamburger.states.next()
+	secondViewHamburger.states.next()
+	thirdViewHamburger.states.next()
+	mainView.states.next()
+	listView.states.next()
+	settingsButton.states.next()
+	
